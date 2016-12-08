@@ -34,10 +34,26 @@
 #include "librtmp/log.h"
 
 #ifdef WIN32
+#ifdef _MSC_VER
+
+#ifdef _WIN64
+//typedef __int64 off_t;
+#define fseeko fseeki64
+#define ftello ftelli64
+#else //_WIN64
+//typedef long off_t;
+#define fseeko fseek
+#define ftello ftell
+#endif //_WIN64
+
+#else //_MSC_VER
 #define fseeko fseeko64
 #define ftello ftello64
+#endif //_MSC_VER
+
 #include <io.h>
 #include <fcntl.h>
+#include <sys/types.h>
 #define	SET_BINMODE(f)	setmode(fileno(f), O_BINARY)
 #else
 #define	SET_BINMODE(f)
@@ -67,7 +83,7 @@ InitSockets()
 #endif
 }
 
-inline void
+void
 CleanupSockets()
 {
 #ifdef WIN32
@@ -278,8 +294,14 @@ GetLastKeyframe(FILE * file,	// output file [in]
 		int *initialFrameType,	// initial frame type (audio/video) [out]
 		uint32_t * nInitialFrameSize)	// length of initialFrame [out]
 {
-  const size_t bufferSize = 16;
+  const size_t bufferSize=16;
+#if(WIN32)
+  char buffer[16];
+#else
   char buffer[bufferSize];
+#endif
+
+
   uint8_t dataType;
   int bAudioOnly;
   off_t size;

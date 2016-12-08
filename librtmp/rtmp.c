@@ -69,6 +69,16 @@ TLS_CTX RTMP_TLS_ctx;
 #define RTMP_SIG_SIZE 1536
 #define RTMP_LARGE_HEADER_SIZE 12
 
+#ifdef _DEBUG
+#ifdef _MSC_VER
+#ifdef _LIB //only compile for static lib
+#define NETSTACKDUMP
+#endif
+#else
+#define NETSTACKDUMP
+#endif
+#endif
+
 static const int packetSize[] = { 12, 8, 4, 1 };
 
 int RTMP_ctrlC;
@@ -1381,7 +1391,7 @@ RTMP_ClientPacket(RTMP *r, RTMPPacket *packet)
   return bHasMediaPacket;
 }
 
-#ifdef _DEBUG
+#ifdef NETSTACKDUMP
 extern FILE *netstackdump;
 extern FILE *netstackdump_read;
 #endif
@@ -1469,7 +1479,7 @@ ReadN(RTMP *r, char *buffer, int n)
 	        return FALSE;
 	}
       /*RTMP_Log(RTMP_LOGDEBUG, "%s: %d bytes\n", __FUNCTION__, nBytes); */
-#ifdef _DEBUG
+#ifdef NETSTACKDUMP
       fwrite(ptr, 1, nBytes, netstackdump_read);
 #endif
 
@@ -4298,7 +4308,7 @@ RTMPSockBuf_Send(RTMPSockBuf *sb, const char *buf, int len)
 {
   int rc;
 
-#ifdef _DEBUG
+#ifdef NETSTACKDUMP
   fwrite(buf, 1, len, netstackdump);
 #endif
 
