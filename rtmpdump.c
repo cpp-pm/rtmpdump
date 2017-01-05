@@ -38,8 +38,8 @@
 
 #ifdef _WIN64
 //typedef __int64 off_t;
-#define fseeko fseeki64
-#define ftello ftelli64
+#define fseeko _fseeki64
+#define ftello _ftelli64
 #else //_WIN64
 //typedef long off_t;
 #define fseeko fseek
