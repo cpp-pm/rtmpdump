@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.0)
 include(HunterGate.cmake)
 
 HunterGate(
-#	URL "https://github.com/ruslo/hunter/archive/v0.16.30.tar.gz"
-#    SHA1 "c5b159b48a3a842697f08fe2a72464adfd78a55d"
     URL "https://github.com/caseymcc/hunter/archive/v0.17.4.tar.gz"
     SHA1 "e14c24d104c14b604fcff0f1a660114d534c13ab"
 )
@@ -23,9 +21,13 @@ if(NOT WIN32)
     #remove O3 if there, add Wall and O2
     string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
-    set(rtmp_extra_libraries ${rtmp_extra_libraries} 
-        pthread
-    )
+
+    #android has pthread functionality in the standard libs
+    if(NOT ANDROID)
+        set(rtmp_extra_libraries ${rtmp_extra_libraries} 
+            pthread
+        )
+    endif()
 endif()
 
 message(STATUS "${CMAKE_CXX_FLAGS_RELEASE}")
