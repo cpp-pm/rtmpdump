@@ -35,12 +35,9 @@ set(librtmp_headers
     rtmp.h
 )
 
-#including target file location instead as ZLIB::zlib (${ZLIB_LIBRARIES}=="ZLIB::zlib") 
-# will not exist as a target when this library is used
-get_property(zlib_target_location TARGET ${ZLIB_LIBRARIES} PROPERTY LOCATION)
 set(librtmp_libs
-    ${OPENSSL_LIBRARIES}
-    ${zlib_target_location}
+    OpenSSL::SSL
+    ZLIB::zlib
 )
 
 if(WIN32)
